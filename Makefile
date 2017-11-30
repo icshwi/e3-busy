@@ -122,6 +122,9 @@ $(EPICS_MODULE_SRC_PATH):
 	$(QUIET) $(git_update)
 	cd $@ && git checkout $(EPICS_MODULE_TAG)
 
+checkout: 
+	cd $(EPICS_MODULE_SRC_PATH) && git checkout $(EPICS_MODULE_TAG)
+
 
 $(E3_ENV_NAME): 
 	$(QUIET) $(git_update)
@@ -172,7 +175,7 @@ epics-clean:
 
 
 
-.PHONY: env $(E3_ENV_NAME) $(EPICS_MODULE_NAME) git-submodule-sync init help help2 build clean install uninstall conf rebuild epics epics-clean
+.PHONY: env $(E3_ENV_NAME) $(EPICS_MODULE_NAME) git-submodule-sync init help help2 build clean install uninstall conf rebuild epics epics-clean checkout
 
 
 
