@@ -1,0 +1,15 @@
+#
+EPICS_MODULE_NAME:=busy
+EPICS_MODULE_TAG:=tags/R1-7
+#
+E3_MODULE_VERSION:=1.7.0
+
+
+
+#
+# In most case, we don't need to touch the following variables.
+#
+E3_MODULE_NAME:=$(EPICS_MODULE_NAME)
+E3_MODULE_SRC_PATH:=$(EPICS_MODULE_NAME)
+E3_MODULE_MAKEFILE:=$(EPICS_MODULE_NAME).Makefile
+
