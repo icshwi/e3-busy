@@ -4,6 +4,8 @@ EPICS_MODULE_TAG:=master
 #
 E3_MODULE_VERSION:=master
 
+# DEPENDENT MODULE VERSION
+ASYN_DEP_VERSION:=4.33.0
 
 #
 # In most case, we don't need to touch the following variables.
