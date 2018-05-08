@@ -16,12 +16,8 @@
 #
 # Author  : Jeong Han Lee
 # email   : han.lee@esss.se
-# Date    : Sunday, November 19 22:14:22 CET 2017
-# version : 0.0.1
-
-# Get where_am_I before include driver.makefile.
-# After driver.makefile, where_am_I is the epics base,
-# so we cannot use it
+# Date    : Tuesday, May  8 16:02:48 CEST 2018
+# version : 0.0.2
 
 
 where_am_I := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
@@ -32,16 +28,23 @@ ifneq ($(strip $(ASYN_DEP_VERSION)),)
 asyn_VERSION=$(ASYN_DEP_VERSION)
 endif
 
-BUSYAPP:=busyApp
-BUSYAPPDB:=$(BUSYAPP)/Db
-BUSYAPPSRC:=$(BUSYAPP)/src
+
+APP:=busyApp
+APPDB:=$(APP)/Db
+APPSRC:=$(APP)/src
+
+USR_INCLUDES += -I$(where_am_I)$(APPSRC)
+
+TEMPLATES += $(APPDB)/busyRecord.db
+TEMPLATES += $(APPDB)/testBusyAsyn.db
 
 
-USR_INCLUDES += -I$(where_am_I)/$(BUSYAPPSRC)
+DBDINC_SRCS = $(APPSRC)/busyRecord.c
+DBDINC_DBDS = $(subst .c,.dbd,   $(DBDINC_SRCS:$(APPSRC)/%=%))
+DBDINC_HDRS = $(subst .c,.h,     $(DBDINC_SRCS:$(APPSRC)/%=%))
+DBDINC_DEPS = $(subst .c,$(DEP), $(DBDINC_SRCS:$(APPSRC)/%=%))
 
 
-TEMPLATES += $(BUSYAPPDB)/busyRecord.db
-TEMPLATES += $(BUSYAPPDB)/testBusyAsyn.db
 
 # Community has the following DBD files
 # busySupport.dbd and busyRecord.dbd
@@ -50,48 +53,31 @@ TEMPLATES += $(BUSYAPPDB)/testBusyAsyn.db
 # the following dbd files, but we don't need to
 # tell driver.makefile where busyRecord.dbd is
 
-DBDS      += $(BUSYAPPSRC)/busySupport_LOCAL.dbd
-DBDS      += $(BUSYAPPSRC)/busySupport_withASYN.dbd
 
-SOURCES   += $(BUSYAPPSRC)/devBusyAsyn.c
-SOURCES   += $(BUSYAPPSRC)/devBusySoftRaw.c
-SOURCES   += $(BUSYAPPSRC)/devBusySoft.c
+SOURCES   += $(APPSRC)/devBusyAsyn.c
 
-# DBINC should be defined in the first compiling order
-# with the following rules
-SOURCES   += $(BUSYAPPSRC)/busyRecord.c
+SOURCES   += $(APPSRC)/devBusySoftRaw.c
+SOURCES   += $(APPSRC)/devBusySoft.c
 
 
-# driver.makefile doesn't use -MM -MF option in order to
-# create dependency files, so we need to create busyRecord.h
-# first in order to compile all others sources.
-# driver.makefile actually create busyRecord.h at the end of
-# compilation.
-# 
-busyRecord$(DEP): ../$(BUSYAPPSRC)/busyRecord.h
+DBDS      += $(APPSRC)/busySupport_LOCAL.dbd
+DBDS      += $(APPSRC)/busySupport_withASYN.dbd
 
-ifdef T_A
 
-USR_DBDFLAGS += -I . -I ..
+HEADERS += $(DBDINC_HDRS)
+SOURCES += $(DBDINC_SRCS)
 
-.SECONDARY: ../$(BUSYAPPSRC)/busyRecord.c
 
-%.h %.c: %.dbd
-#	@echo "@ $@"
-#	@echo "% $%"
-#	@echo "< $<"
-#	@echo "? $?"
-#	@echo "^ $^"
-#	@echo "+ $+"
-#	@echo "| $|"
-#	@echo "* $*"
-#	@echo "EPICS MSI $(MSI3_15)"
-#	@echo "EPICS PERL $(PERL)"
-#	@echo "$(DBTORECORDTYPEH)"
-	$(DBTORECORDTYPEH)  $(USR_DBDFLAGS)  -o $@ $<
+$(DBDINC_DEPS): $(DBDINC_HDRS)
 
-endif
+.dbd.h:
+	$(DBTORECORDTYPEH)  $(USR_DBDFLAGS) -o $@ $<
+
+.PHONY: $(DBDINC_DEPS) .dbd.h
+
 
 # db rule is the default in RULES_E3, so add the empty one
 
 db:
+
+.PHONY: db 
