@@ -1,4 +1,4 @@
 [submodule "busy"]
 	path = busy
 	url = https://github.com/epics-modules/busy
-	ignore = all
+	ignore = dirty
