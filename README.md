@@ -1,4 +1,11 @@
-## e3-busy
+e3-busy
+==
+ESS Site-specific EPICS module : busy
 
-* We do build busy module  WITH ASYN and WITHOUT AUTOSAVE. Please check busy.Makefile and Makefile in busyApp/src/
-* We don't use parallel build 
+
+## Dependency Plot
+
+|![busy dep](docs/busy.png)|
+| :---: |
+|**Figure 1** Depdendency Tree. |
+
