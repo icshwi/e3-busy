@@ -17,7 +17,7 @@
 # Author  : Jeong Han Lee
 # email   : han.lee@esss.se
 # Date    : Monday, September 10 09:27:43 CEST 2018
-# version : 0.0.3
+# version : 0.0.4
 
 
 where_am_I := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
@@ -40,6 +40,7 @@ USR_INCLUDES += -I$(where_am_I)$(APPSRC)
 
 TEMPLATES += $(APPDB)/busyRecord.db
 TEMPLATES += $(APPDB)/testBusyAsyn.db
+TEMPLATES += $(wildcard $(APPDB)/*.req)
 
 
 DBDINC_SRCS = $(APPSRC)/busyRecord.c
